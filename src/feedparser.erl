@@ -11,7 +11,7 @@
 
 -record(state, {port}).
 
--define(PROG,    "priv/python priv/feedparser-port.py").
+-define(PROG,    "./python ./feedparser-port.py").
 -define(RETRY,   1).
 -define(TIMEOUT, 10000).
 
@@ -67,7 +67,8 @@ terminate(_Reason, _State) ->
 %% ===================================================================
 
 start_port() ->
-	open_port({spawn, ?PROG}, [{packet, 4}, binary, use_stdio]).
+	Dir = filename:join( [ filename:dirname( code:which(?MODULE) ), "..", "priv" ] ),
+	open_port({spawn, ?PROG}, [{packet, 4}, binary, use_stdio, {cd, Dir}]).
 
 restart_port(Port) ->
 	catch port_close(Port),
