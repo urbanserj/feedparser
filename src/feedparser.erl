@@ -67,7 +67,10 @@ terminate(_Reason, _State) ->
 %% ===================================================================
 
 start_port() ->
-	Dir = filename:join( [ filename:dirname( code:which(?MODULE) ), "..", "priv" ] ),
+	Dir = case code:priv_dir(?MODULE) of
+		{error, _} -> filename:join( [ filename:dirname(code:which(?MODULE)), "..", "priv" ] );
+		PrivDir -> PrivDir
+	end,
 	open_port({spawn, ?PROG}, [{packet, 4}, binary, use_stdio, {cd, Dir}]).
 
 restart_port(Port) ->
