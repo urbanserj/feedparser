@@ -10,7 +10,7 @@ from erlport import Port, Protocol, String, Atom
 # u"" -> []
 def conv(term):
 	if isinstance(term, dict):
-		return [(Atom(key), conv(value)) for key, value in term.items()]
+		return [(Atom(key), conv(value)) for key, value in term.items() if key[-6:] != 'detail']
 	if isinstance(term, tuple):
 		return (conv(t) for t in term)
 	if isinstance(term, list):
