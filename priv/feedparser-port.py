@@ -28,7 +28,7 @@ def conv(term):
 
 class FPProtocol(Protocol):
 	def handle_parse(self, data, headers):
-		feed = feedparser.parse(data, response_headers=headers)
+		feed = feedparser.parse(data, response_headers=dict(headers))
 		return conv(feed)
 
 if __name__ == "__main__":
