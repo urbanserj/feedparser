@@ -16,15 +16,19 @@
 -define(TIMEOUT, 10000).
 
 start() ->
-	gen_server:start({local, ?MODULE}, ?MODULE, [], []).
+	gen_server:start(?MODULE, [], []).
 start_link() ->
-	gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
+	gen_server:start_link(?MODULE, [], []).
 
 parse(Data) ->
 	parse(Data, []).
 
 parse(Data, Headers) ->
-	gen_server:call(?MODULE, {parse, Data, Headers}, ?TIMEOUT*?RETRY*2).
+	hottub:execute(feedparser,
+		fun(Worker) ->
+			gen_server:call(Worker, {parse, Data, Headers}, ?TIMEOUT*16)
+		end
+	).
 
 %% ===================================================================
 %% Gen_server callbacks

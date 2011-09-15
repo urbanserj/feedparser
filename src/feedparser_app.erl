@@ -10,7 +10,11 @@
 %% ===================================================================
 
 start(_StartType, _StartArgs) ->
-    feedparser_sup:start_link().
+	PoolSize = case application:get_env(feedparser, pool_size) of
+		{ok, L} -> L;
+		_ -> 4
+	end,
+	hottub:start_link(feedparser, PoolSize, feedparser, start_link, []).
 
 stop(_State) ->
     ok.
