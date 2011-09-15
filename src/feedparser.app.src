@@ -5,8 +5,7 @@
   {registered, []},
   {applications, [
                   kernel,
-                  stdlib,
-                  hottub
+                  stdlib
                  ]},
   {mod, { feedparser_app, []}},
   {env, []}
