@@ -24,11 +24,9 @@ parse(Data) ->
 	parse(Data, []).
 
 parse(Data, Headers) ->
-	hottub:execute(feedparser,
-		fun(Worker) ->
-			gen_server:call(Worker, {parse, Data, Headers}, ?TIMEOUT*16)
-		end
-	).
+	Worker = ht_pool:checkout_worker(feedparser),
+	ht_pool:checkin_worker(feedparser, Worker),
+	gen_server:call(Worker, {parse, Data, Headers}, ?TIMEOUT*16).
 
 %% ===================================================================
 %% Gen_server callbacks
