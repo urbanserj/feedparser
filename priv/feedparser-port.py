@@ -32,6 +32,6 @@ class FPProtocol(Protocol):
 		return (Atom('ok'), conv(feed))
 
 if __name__ == "__main__":
-	# sys.stderr.close()
+	sys.stderr.close()
 	proto = FPProtocol()
 	proto.run(Port(use_stdio=True, packet=4))
