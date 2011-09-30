@@ -11,7 +11,7 @@ from erlport import Port, Protocol, String, Atom
 def conv(term):
 	if isinstance(term, dict):
 		return [ (Atom(key), conv(value)) for key, value in term.items()
-			if value and key[-6:] not in ['detail', 'parsed'] ]
+			if value and (key[-6:] not in ['detail', 'parsed'] or key in ['author_detail']) ]
 	if isinstance(term, tuple):
 		return (conv(t) for t in term)
 	if isinstance(term, list):
