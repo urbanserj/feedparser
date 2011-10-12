@@ -2,8 +2,12 @@
 -behavior(gen_server).
 
 %% External exports
--export([start/0, start_link/0]).
--export([parse/1, parse/2]).
+-export([
+	start/0, start/1,
+	start_link/0, start_link/1,
+
+	parse/1, parse/2
+]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2,
@@ -13,10 +17,15 @@
 
 -define(PROG,    "./python ./feedparser-port.py").
 -define(RETRY,   1).
--define(TIMEOUT, 10000).
+-define(TIMEOUT, 30000).
 
+start(_) ->
+	start().
 start() ->
 	gen_server:start(?MODULE, [], []).
+
+start_link(_) ->
+	start_link().
 start_link() ->
 	gen_server:start_link(?MODULE, [], []).
 
@@ -24,9 +33,12 @@ parse(Data) ->
 	parse(Data, []).
 
 parse(Data, Headers) ->
-	Worker = ht_pool:checkout_worker(feedparser),
-	ht_pool:checkin_worker(feedparser, Worker),
-	gen_server:call(Worker, {parse, Data, Headers}, ?TIMEOUT*16).
+	Worker = poolboy:checkout(feedparser, true, ?TIMEOUT*16),
+	try
+		gen_server:call(Worker, {parse, Data, Headers}, ?TIMEOUT*16)
+	after
+		poolboy:checkin(feedparser, Worker)
+	end.
 
 %% ===================================================================
 %% Gen_server callbacks
