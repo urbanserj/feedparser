@@ -8,5 +8,5 @@
                   stdlib
                  ]},
   {mod, { feedparser_app, []}},
-  {env, []}
+  {env, [ {pool_size, 4}]}
  ]}.
