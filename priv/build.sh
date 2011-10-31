@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -e
 
 for filename in /usr/bin/virtualenv-2.7 /usr/bin/virtualenv-2.6 /usr/bin/virtualenv-2.5; do
 	if [ -f $filename ]; then
