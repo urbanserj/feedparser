@@ -1,11 +1,11 @@
 -module(feedparser).
+-author('Sergey Urbanovich <sergey.urbanovich@gmail.com>').
+
 -behavior(gen_server).
 
 %% External exports
 -export([
-	start/0, start/1,
-	start_link/0, start_link/1,
-
+	start/0, start_link/0, start_link/1,
 	parse/1, parse/2
 ]).
 
@@ -13,17 +13,14 @@
 -export([init/1, handle_call/3, handle_cast/2,
 	handle_info/2, code_change/3, terminate/2]).
 
+-define(RETRY,   1).
+-define(PORT_TIMEOUT, 30000).
+-define(TIMEOUT, ?PORT_TIMEOUT*16).
+
 -record(state, {port}).
 
--define(PROG,    "./python ./feedparser-port.py").
--define(RETRY,   1).
--define(TIMEOUT, 30000).
-
-start(_) ->
-	start().
 start() ->
 	gen_server:start(?MODULE, [], []).
-
 start_link(_) ->
 	start_link().
 start_link() ->
@@ -31,11 +28,10 @@ start_link() ->
 
 parse(Data) ->
 	parse(Data, []).
-
 parse(Data, Headers) ->
-	Worker = poolboy:checkout(feedparser, true, ?TIMEOUT*16),
+	Worker = poolboy:checkout(feedparser, true, ?TIMEOUT),
 	try
-		gen_server:call(Worker, {parse, Data, Headers}, ?TIMEOUT*16)
+		gen_server:call(Worker, {parse, Data, Headers}, ?TIMEOUT)
 	after
 		poolboy:checkin(feedparser, Worker)
 	end.
@@ -51,7 +47,7 @@ init(_) ->
 handle_call({parse, Data, Headers}, From, State) ->
 	handle_call({parse, Data, Headers, ?RETRY}, From, State);
 handle_call({parse, _Data, _Headers, 0}, _From, #state{port = Port} = State) ->
-	{reply, {error, wtf}, State#state{port = restart_port(Port)}};
+	{reply, {error, undefined}, State#state{port = restart_port(Port)}};
 handle_call({parse, Data, Headers, Cnt}, From, #state{port = Port} = State) ->
 	port_command(Port, term_to_binary({parse, Data, Headers})),
 	receive
@@ -59,7 +55,7 @@ handle_call({parse, Data, Headers, Cnt}, From, #state{port = Port} = State) ->
 			{reply, binary_to_term(PData), State};
 		{'EXIT', Port, _Reason} ->
 			handle_call({parse, Data, Headers, Cnt-1}, From, State#state{port = start_port()})
-	after ?TIMEOUT ->
+	after ?PORT_TIMEOUT ->
 		handle_call({parse, Data, Headers, Cnt-1}, From, State#state{port = restart_port(Port)})
 	end.
 
@@ -69,7 +65,6 @@ handle_cast(_Request, State) ->
 handle_info({'EXIT', Port, _Reason}, #state{port = Port} = State) ->
 	{noreply, State#state{port = start_port()}};
 handle_info(_Info, State) ->
-	% io:format("info: ~p~n", [_Info]),
 	{noreply, State}.
 
 code_change(_OldVsn, State, _Extra) ->
@@ -85,7 +80,8 @@ start_port() ->
 		{error, _} -> filename:join( [ filename:dirname(code:which(?MODULE)), "..", "priv" ] );
 		PrivDir -> PrivDir
 	end,
-	open_port({spawn, ?PROG}, [{packet, 4}, binary, use_stdio, {cd, Dir}]).
+	Python = filename:join(Dir, "./python"),
+	open_port({spawn_executable, Python}, [{packet, 4}, binary, use_stdio, {cd, Dir}, {args, ["./feedparser-port.py"]}]).
 
 restart_port(Port) ->
 	catch port_close(Port),

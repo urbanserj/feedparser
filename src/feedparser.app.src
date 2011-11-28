@@ -1,6 +1,6 @@
 {application, feedparser,
  [
-  {description, ""},
+  {description, "feedparser"},
   {vsn, "1"},
   {registered, []},
   {applications, [
