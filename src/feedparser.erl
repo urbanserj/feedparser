@@ -38,9 +38,10 @@ init(_) ->
 		{error, _} -> filename:join( [ filename:dirname(code:which(?MODULE)), "..", "priv" ] );
 		PrivDir -> PrivDir
 	end,
-	Python = filename:join(Dir, "./python"),
+	AbsDir = filename:absname(Dir),
+	Python = filename:join(AbsDir, "./python"),
 	Port = open_port({spawn_executable, Python},
-		[{packet, 4}, binary, use_stdio, exit_status, {cd, Dir}, {args, ["./feedparser-port.py"]}]
+		[{packet, 4}, binary, use_stdio, exit_status, {cd, AbsDir}, {args, ["./feedparser-port.py"]}]
 	),
 	{ok, #state{port = Port}}.
 
