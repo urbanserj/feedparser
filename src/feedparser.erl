@@ -22,7 +22,7 @@ start_link(_) ->
 parse(Data) ->
 	parse(Data, []).
 parse(Data, Headers) ->
-	Worker = poolboy:checkout(feedparser, true, ?TIMEOUT),
+	Worker = poolboy:checkout(feedparser, true, infinity),
 	try
 		gen_server:call(Worker, {parse, Data, Headers}, ?TIMEOUT)
 	after
