@@ -47,7 +47,7 @@ init(_) ->
 
 handle_call({parse, Data, Headers}, From, #state{port = Port, queue = Queue} = State) ->
 	port_command(Port, term_to_binary({parse, Data, Headers})),
-	{noreply, State#state{queue = queue:in(From, Queue)}}.
+	{noreply, State#state{queue = queue:in(From, Queue)}, ?TIMEOUT}.
 
 handle_cast(_Request, State) ->
 	{noreply, State}.
@@ -58,6 +58,8 @@ handle_info({Port, {data, Data}}, #state{port = Port, queue = FQueue} = State) -
 	{noreply, State#state{queue = Queue}};
 handle_info({Port, {exit_status, _Code}}, #state{port = Port} = State) ->
 	{stop, port_exit, State};
+handle_info(timeout, State) ->
+	{stop, timeout, State};
 handle_info(_Info, State) ->
 	{noreply, State}.
 
