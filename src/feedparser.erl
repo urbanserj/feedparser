@@ -26,7 +26,10 @@ parse(Data, Headers) ->
 	try
 		gen_server:call(Worker, {parse, Data, Headers}, ?TIMEOUT)
 	after
-		poolboy:checkin(feedparser, Worker)
+		case is_process_alive(Worker) of
+			true -> poolboy:checkin(feedparser, Worker);
+			false -> ok
+		end
 	end.
 
 %% ===================================================================
