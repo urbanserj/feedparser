@@ -2,6 +2,7 @@
 -author('Sergey Urbanovich <sergey.urbanovich@gmail.com>').
 
 -behavior(gen_server).
+-behavior(poolboy_worker).
 
 %% External exports
 -export([
