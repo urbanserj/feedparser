@@ -8,3 +8,6 @@ deps:
 
 clean:
 	rebar clean
+
+eunit: compile
+	rebar eunit skip_deps=true

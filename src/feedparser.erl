@@ -75,3 +75,18 @@ code_change(_OldVsn, State, _Extra) ->
 
 terminate(_Reason, _State) ->
 	ok.
+
+
+-ifdef(TEST).
+
+-include_lib("eunit/include/eunit.hrl").
+
+atom10_test() ->
+	ok = application:start(feedparser),
+	{ok, Data} = file:read_file("../atom10.xml"),
+	{ok, Atom} = feedparser:parse(Data),
+	{entries, [Entry]} = lists:keyfind(entries, 1, Atom),
+	{title, "First entry title"} = lists:keyfind(title, 1, Entry),
+	ok = application:stop(feedparser).
+
+-endif.
