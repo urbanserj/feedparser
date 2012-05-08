@@ -16,4 +16,4 @@ $VIRTUALENV $ENVDIR
 $ENVDIR/bin/easy_install erlport
 $ENVDIR/bin/easy_install https://github.com/kurtmckee/feedparser/tarball/master
 $ENVDIR/bin/easy_install chardet
-rm -f $ENVDIR/local
+rm -rf $ENVDIR/local
