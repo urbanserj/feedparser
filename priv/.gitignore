@@ -1,1 +1,4 @@
-env/
+chardet/
+erlport/
+feedparser.py
+*.pyc

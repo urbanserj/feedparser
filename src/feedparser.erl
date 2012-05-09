@@ -45,10 +45,9 @@ init(_) ->
 			PrivDir
 	end,
 	AbsDir = filename:absname(Dir),
-	Python = filename:join(AbsDir, "./python"),
-	Port = open_port({spawn_executable, Python},
+	Port = open_port({spawn_executable, "/usr/bin/env"},
 		[{packet, 4}, binary, use_stdio, exit_status,
-		{cd, AbsDir}, {args, ["./feedparser-port.py"]}]
+		{cd, AbsDir}, {args, ["python", "./feedparser-port.py"]}]
 	),
 	{ok, #state{port=Port}}.
 
