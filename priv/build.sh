@@ -1,14 +1,11 @@
 #!/bin/sh -e
 
-for filename in /usr/bin/virtualenv-2.7 /usr/bin/virtualenv-2.6 /usr/bin/virtualenv-2.5; do
-	if [ -f $filename ]; then
-		VIRTUALENV=$filename
-		break
-	fi
+for version in 2.7 2.6 2.5; do
+	VIRTUALENV=`which virtualenv-$version 2> /dev/null || echo`
+	[ -n ""$VIRTUALENV ] && break
 done
-if [ -z $VIRTUALENV ]; then
-	VIRTUALENV=/usr/bin/virtualenv
-fi
+[ -z $VIRTUALENV ] && VIRTUALENV=`which virtualenv`
+VER=`echo $VIRTUALENV | sed -re 's/.*virtualenv-?(.[.].)?/\1/'`
 
 cd `dirname $0`
 [ -d chardet -a \
@@ -49,6 +46,8 @@ patch feedparser.py << '_PATCH_'
      if declmatch.search(newdata):
 _PATCH_
 
+sed -i -re '1s%#!.*%#!'`which python$VER`'%' feedparser-port.py
+
 rm -rf env
 
-python -m compileall .
+python$VER -m compileall .

@@ -45,10 +45,9 @@ init(_) ->
 			PrivDir
 	end,
 	AbsDir = filename:absname(Dir),
-	Port = open_port({spawn_executable, "/usr/bin/env"},
-		[{packet, 4}, binary, use_stdio, exit_status,
-		{cd, AbsDir}, {args, ["python", "./feedparser-port.py"]}]
-	),
+	AbsScript = filename:join(AbsDir, "feedparser-port.py"),
+	Port = open_port({spawn_executable, AbsScript},
+		[{packet, 4}, binary, use_stdio, exit_status, {cd, AbsDir}]),
 	{ok, #state{port=Port}}.
 
 handle_call({parse, Data}, From, #state{port=Port, queue=Queue}=State) ->
