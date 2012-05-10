@@ -10,7 +10,7 @@ if [ -z $VIRTUALENV ]; then
 	VIRTUALENV=/usr/bin/virtualenv
 fi
 
-chdir `dirname $0`
+cd `dirname $0`
 [ -d chardet -a \
   -d erlport -a \
   -f feedparser.py -a \
@@ -19,9 +19,9 @@ rm -rf env chardet erlport feedparser.py *.pyc
 
 $VIRTUALENV env
 
-env/bin/easy_install erlport
-env/bin/easy_install https://github.com/kurtmckee/feedparser/tarball/master
-env/bin/easy_install chardet
+env/bin/easy_install -Z erlport
+env/bin/easy_install -Z https://github.com/kurtmckee/feedparser/tarball/master
+env/bin/easy_install -Z chardet
 
 mv env/lib/*/site-packages/erlport-*/erlport .
 mv env/lib/*/site-packages/feedparser-*/feedparser.py .
