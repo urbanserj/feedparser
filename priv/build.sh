@@ -18,7 +18,7 @@ rm -rf env chardet erlport feedparser.py *.pyc
 $VIRTUALENV env
 
 env/bin/easy_install -Z erlport
-env/bin/easy_install -Z https://github.com/kurtmckee/feedparser/tarball/b361142
+env/bin/easy_install -Z https://github.com/kurtmckee/feedparser/tarball/24e0e27
 env/bin/easy_install -Z chardet
 
 mv env/lib/*/site-packages/erlport-*/erlport .
@@ -26,25 +26,25 @@ mv env/lib/*/site-packages/feedparser-*/feedparser.py .
 mv env/lib/*/site-packages/chardet-*/chardet .
 
 patch feedparser.py << '_PATCH_'
---- feedparser.py.orig	2012-05-10 17:41:39.536888179 +0400
-+++ feedparser.py	2012-05-10 17:39:06.364128637 +0400
-@@ -3737,7 +3737,15 @@
-     elif data[:4] == _l2bytes([0xff, 0xfe, 0x00, 0x00]):
-         encoding = 'utf-32le'
-         data = data[4:]
--    newdata = unicode(data, encoding)
-+    try:
-+        newdata = unicode(data, encoding)
-+    except UnicodeDecodeError:
-+        idata = unicode(data, encoding, 'ignore')
-+        rdata = unicode(data, encoding, 'replace')
-+        if len(rdata) - len(idata) < 32:
-+            newdata = idata
-+        else:
-+            raise
-     declmatch = re.compile('^<\?xml[^>]*?>')
-     newdecl = '''<?xml version='1.0' encoding='utf-8'?>'''
-     if declmatch.search(newdata):
+--- feedparser.py.orig	2012-05-29 16:16:45.456262539 +0400
++++ feedparser.py	2012-05-29 16:16:51.676293399 +0400
+@@ -3750,7 +3750,15 @@
+             continue
+         tried_encodings.append(proposed_encoding)
+         try:
+-            data = data.decode(proposed_encoding)
++            try:
++                data = unicode(data, proposed_encoding)
++            except UnicodeDecodeError:
++                idata = unicode(data, proposed_encoding, 'ignore')
++                rdata = unicode(data, proposed_encoding, 'replace')
++                if len(rdata) - len(idata) < 32:
++                    data = idata
++                else:
++                    raise
+         except (UnicodeDecodeError, LookupError):
+             pass
+         else:
 _PATCH_
 
 sed -i -re '1s%#!.*%#!'`which python$VER`'%' feedparser-port.py
