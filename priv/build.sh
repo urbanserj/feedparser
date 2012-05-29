@@ -18,7 +18,7 @@ rm -rf env chardet erlport feedparser.py *.pyc
 $VIRTUALENV env
 
 env/bin/easy_install -Z erlport
-env/bin/easy_install -Z https://github.com/kurtmckee/feedparser/tarball/master
+env/bin/easy_install -Z https://github.com/kurtmckee/feedparser/tarball/b361142
 env/bin/easy_install -Z chardet
 
 mv env/lib/*/site-packages/erlport-*/erlport .
