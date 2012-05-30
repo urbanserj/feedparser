@@ -19,12 +19,12 @@ def conv(term):
 	if term is True or term is False:
 		return term
 	if isinstance(term, str):
-		return unicode(term)
+		return term.decode('utf8')
 	if isinstance(term, (unicode, int, long, float)):
 		return term
 	if isinstance(term, time.struct_time):
 		return time.strftime("%a, %d %b %Y %H:%M:%S", term)
-	return unicode(term.__repr__())
+	return term.__repr__().decode('utf8')
 
 class FPProtocol(Protocol):
 	def handle_parse(self, data, headers):
