@@ -20,7 +20,7 @@
 start_link(_) ->
 	gen_server:start_link(?MODULE, [], []).
 
--spec parse(binary()) -> [
+-spec parse(binary()) -> {ok, [
 	  {bozo, integer()}
 	| {bozo_exception, string()}
 	| {feed, [
@@ -157,7 +157,7 @@ start_link(_) ->
 	| {encoding, string()}
 	| {namespaces, [{atom(), string()}]}
 	| {version, string()}
-].
+]}.
 parse(Data) ->
 	parse(Data, []).
 parse(Data, Headers) ->
