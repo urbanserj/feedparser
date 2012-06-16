@@ -20,6 +20,144 @@
 start_link(_) ->
 	gen_server:start_link(?MODULE, [], []).
 
+-spec parse(binary()) -> [
+	  {bozo, integer()}
+	| {bozo_exception, string()}
+	| {feed, [
+		  {author, string()}
+		| {author_detail, string()}
+		| {cloud, [
+			  {domain, string()}
+			| {port, string() | integer()}
+			| {path, string()}
+			| {registerProcedure, string()}
+			| {protocol, string()}
+		  ]}
+		| {contributors, [[
+			  {name, string()}
+			| {href, string()}
+			| {email, string()}
+		  ]]}
+		| {docs, string()}
+		| {errorreportsto, string()}
+		| {generator, string()}
+		| {icon, string()}
+		| {id, string()}
+		| {image, [
+			  {title, string()}
+			| {href, string()}
+			| {link, string()}
+			| {width, integer()}
+			| {height, integer()}
+			| {description, string()}
+		  ]}
+		| {info, string()}
+		| {language, string()}
+		| {license, string()}
+		| {link, string()}
+		| {links, [[
+			  {ref, string()}
+			| {type, string()}
+			| {href, string()}
+			| {title, string()}
+		  ]]}
+		| {logo, string()}
+		| {published, string()}
+		| {publisher, string()}
+		| {rights, string()}
+		| {subtitle, string()}
+		| {tags, [[
+			  {term, string()}
+			| {scheme, string()}
+			| {label, string()}
+		  ]]}
+		| {textinput, [
+			  {title, string()}
+			| {link, string()}
+			| {name, string()}
+			| {description, string()}
+		  ]}
+		| {title, string()}
+		| {ttl, string()}
+		| {updated, string()}
+	  ]}
+	| {entries, [[
+		  {author, string()}
+		| {author_detail, [
+			  {name, string()}
+			| {href, string()}
+			| {email, string()}
+		  ]}
+		| {comments, string()}
+		| {content, [[
+			  {value, string()}
+			| {type, string()}
+			| {language, string()}
+			| {base, string()}
+		  ]]}
+		| {contributors, [[
+			  {name, string()}
+			| {href, string()}
+			| {email, string()}
+		  ]]}
+		| {created, string()}
+		| {enclosures, [[
+			  {href, string()}
+			| {length, string()}
+			| {type, string()}
+		  ]]}
+		| {expired, string()}
+		| {id, string()}
+		| {license, string()}
+		| {link, string()}
+		| {links, [[
+			  {ref, string()}
+			| {type, string()}
+			| {href, string()}
+			| {title, string()}
+		  ]]}
+		| {published, string()}
+		| {publisher, string()}
+		| {source, [
+			  {author, string()}
+			| {contributors, [[
+				  {name, string()}
+				| {href, string()}
+				| {email, string()}
+			  ]]}
+			| {icon, string()}
+			| {link, string()}
+			| {links, [[
+				  {ref, string()}
+				| {type, string()}
+				| {href, string()}
+				| {title, string()}
+			  ]]}
+			| {logo, string()}
+			| {rights, string()}
+			| {subtitle, string()}
+			| {title, string()}
+			| {updated, string()}
+		  ]}
+		| {summary, string()}
+		| {tags, [[
+			  {term, string()}
+			| {scheme, string()}
+			| {label, string()}
+		  ]]}
+		| {title, string()}
+		| {updated, string()}
+		| {vcard, string()}
+		| {xfn, [
+			  {relationships, string()}
+			| {href, string()}
+			| {name, string()}
+		  ]}
+	  ]]}
+	| {encoding, string()}
+	| {namespaces, [{atom(), string()}]}
+	| {version, string()}
+].
 parse(Data) ->
 	parse(Data, []).
 parse(Data, Headers) ->
