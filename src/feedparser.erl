@@ -157,7 +157,7 @@ start_link(_) ->
 	| {encoding, string()}
 	| {namespaces, [{atom(), string()}]}
 	| {version, string()}
-]} | {error, internal}.
+]} | {error, internal | timeout | exit}.
 parse(Data) ->
 	parse(Data, []).
 parse(Data, Headers) ->
@@ -166,6 +166,8 @@ parse(Data, Headers) ->
 		BinData = term_to_binary({parse, Data, Headers}),
 		RBinData = gen_server:call(Worker, {parse, BinData}, ?TIMEOUT),
 		binary_to_term(RBinData)
+	catch exit:{Error, _} ->
+		{error, Error}
 	after
 		poolboy:checkin(feedparser, Worker)
 	end.
@@ -200,7 +202,7 @@ handle_info({Port, {data, Data}}, #state{port=Port, queue=FQueue}=State) ->
 	gen_server:reply(From, Data),
 	{noreply, State#state{queue=Queue}};
 handle_info({Port, {exit_status, _Code}}, #state{port=Port}=State) ->
-	{stop, port_exit, State};
+	{stop, exit, State};
 handle_info(timeout, State) ->
 	{stop, timeout, State};
 handle_info(_Info, State) ->
