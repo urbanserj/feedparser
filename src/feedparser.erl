@@ -157,7 +157,7 @@ start_link(_) ->
 	| {encoding, string()}
 	| {namespaces, [{atom(), string()}]}
 	| {version, string()}
-]}.
+]} | {error, internal}.
 parse(Data) ->
 	parse(Data, []).
 parse(Data, Headers) ->

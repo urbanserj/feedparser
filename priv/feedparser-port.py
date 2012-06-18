@@ -28,8 +28,10 @@ def conv(term):
 
 class FPProtocol(Protocol):
 	def handle_parse(self, data, headers):
-		feed = feedparser.parse(data, response_headers=dict(headers))
-		return (Atom('ok'), conv(feed))
+		feed = []
+		try: feed = feedparser.parse(data, response_headers=dict(headers))
+		except: return (Atom('error'), Atom('internal'))
+		finally: return (Atom('ok'), conv(feed))
 
 if __name__ == "__main__":
 	sys.stderr.close()
