@@ -6,7 +6,9 @@
 
 %% External exports
 -export([
-	start_link/1, parse/1, parse/2
+	start_link/1,
+	parse/1, parse/2,
+	bparse/1, bparse/2
 ]).
 
 %% gen_server callbacks
@@ -20,150 +22,173 @@
 start_link(_) ->
 	gen_server:start_link(?MODULE, [], []).
 
--spec parse(binary()) -> {ok, [
+-type feedparser(String) :: {ok, [
 	  {bozo, integer()}
-	| {bozo_exception, string()}
+	| {bozo_exception, String}
 	| {feed, [
-		  {author, string()}
-		| {author_detail, string()}
+		  {author, String}
+		| {author_detail, String}
 		| {cloud, [
-			  {domain, string()}
-			| {port, string() | integer()}
-			| {path, string()}
-			| {registerProcedure, string()}
-			| {protocol, string()}
+			  {domain, String}
+			| {port, String | integer()}
+			| {path, String}
+			| {registerProcedure, String}
+			| {protocol, String}
 		  ]}
 		| {contributors, [[
-			  {name, string()}
-			| {href, string()}
-			| {email, string()}
+			  {name, String}
+			| {href, String}
+			| {email, String}
 		  ]]}
-		| {docs, string()}
-		| {errorreportsto, string()}
-		| {generator, string()}
-		| {icon, string()}
-		| {id, string()}
+		| {docs, String}
+		| {errorreportsto, String}
+		| {generator, String}
+		| {icon, String}
+		| {id, String}
 		| {image, [
-			  {title, string()}
-			| {href, string()}
-			| {link, string()}
+			  {title, String}
+			| {href, String}
+			| {link, String}
 			| {width, integer()}
 			| {height, integer()}
-			| {description, string()}
+			| {description, String}
 		  ]}
-		| {info, string()}
-		| {language, string()}
-		| {license, string()}
-		| {link, string()}
+		| {info, String}
+		| {language, String}
+		| {license, String}
+		| {link, String}
 		| {links, [[
-			  {ref, string()}
-			| {type, string()}
-			| {href, string()}
-			| {title, string()}
+			  {ref, String}
+			| {type, String}
+			| {href, String}
+			| {title, String}
 		  ]]}
-		| {logo, string()}
-		| {published, string()}
-		| {publisher, string()}
-		| {rights, string()}
-		| {subtitle, string()}
+		| {logo, String}
+		| {published, String}
+		| {publisher, String}
+		| {rights, String}
+		| {subtitle, String}
 		| {tags, [[
-			  {term, string()}
-			| {scheme, string()}
-			| {label, string()}
+			  {term, String}
+			| {scheme, String}
+			| {label, String}
 		  ]]}
 		| {textinput, [
-			  {title, string()}
-			| {link, string()}
-			| {name, string()}
-			| {description, string()}
+			  {title, String}
+			| {link, String}
+			| {name, String}
+			| {description, String}
 		  ]}
-		| {title, string()}
-		| {ttl, string()}
-		| {updated, string()}
+		| {title, String}
+		| {ttl, String}
+		| {updated, String}
 	  ]}
 	| {entries, [[
-		  {author, string()}
+		  {author, String}
 		| {author_detail, [
-			  {name, string()}
-			| {href, string()}
-			| {email, string()}
+			  {name, String}
+			| {href, String}
+			| {email, String}
 		  ]}
-		| {comments, string()}
+		| {comments, String}
 		| {content, [[
-			  {value, string()}
-			| {type, string()}
-			| {language, string()}
-			| {base, string()}
+			  {value, String}
+			| {type, String}
+			| {language, String}
+			| {base, String}
 		  ]]}
 		| {contributors, [[
-			  {name, string()}
-			| {href, string()}
-			| {email, string()}
+			  {name, String}
+			| {href, String}
+			| {email, String}
 		  ]]}
-		| {created, string()}
+		| {created, String}
 		| {enclosures, [[
-			  {href, string()}
-			| {length, string()}
-			| {type, string()}
+			  {href, String}
+			| {length, String}
+			| {type, String}
 		  ]]}
-		| {expired, string()}
-		| {id, string()}
-		| {license, string()}
-		| {link, string()}
+		| {expired, String}
+		| {id, String}
+		| {license, String}
+		| {link, String}
 		| {links, [[
-			  {ref, string()}
-			| {type, string()}
-			| {href, string()}
-			| {title, string()}
+			  {ref, String}
+			| {type, String}
+			| {href, String}
+			| {title, String}
 		  ]]}
-		| {published, string()}
-		| {publisher, string()}
+		| {published, String}
+		| {publisher, String}
 		| {source, [
-			  {author, string()}
+			  {author, String}
 			| {contributors, [[
-				  {name, string()}
-				| {href, string()}
-				| {email, string()}
+				  {name, String}
+				| {href, String}
+				| {email, String}
 			  ]]}
-			| {icon, string()}
-			| {link, string()}
+			| {icon, String}
+			| {link, String}
 			| {links, [[
-				  {ref, string()}
-				| {type, string()}
-				| {href, string()}
-				| {title, string()}
+				  {ref, String}
+				| {type, String}
+				| {href, String}
+				| {title, String}
 			  ]]}
-			| {logo, string()}
-			| {rights, string()}
-			| {subtitle, string()}
-			| {title, string()}
-			| {updated, string()}
+			| {logo, String}
+			| {rights, String}
+			| {subtitle, String}
+			| {title, String}
+			| {updated, String}
 		  ]}
-		| {summary, string()}
+		| {summary, String}
 		| {tags, [[
-			  {term, string()}
-			| {scheme, string()}
-			| {label, string()}
+			  {term, String}
+			| {scheme, String}
+			| {label, String}
 		  ]]}
-		| {title, string()}
-		| {updated, string()}
-		| {vcard, string()}
+		| {title, String}
+		| {updated, String}
+		| {vcard, String}
 		| {xfn, [
-			  {relationships, string()}
-			| {href, string()}
-			| {name, string()}
+			  {relationships, String}
+			| {href, String}
+			| {name, String}
 		  ]}
 	  ]]}
-	| {encoding, string()}
-	| {namespaces, [{atom(), string()}]}
-	| {version, string()}
+	| {encoding, String}
+	| {namespaces, [{atom(), String}]}
+	| {version, String}
 ]} | {error, internal | timeout | exit}.
+
+-type headers() :: [{binary(), binary()}].
+
+
+-spec parse(binary()) -> feedparser(string()).
 parse(Data) ->
 	parse(Data, []).
+
+-spec parse(binary(), headers()) -> feedparser(string()).
 parse(Data, Headers) ->
+	iparse(Data, Headers, string).
+
+
+-spec bparse(binary()) -> feedparser(binary()).
+bparse(Data) ->
+	bparse(Data, []).
+
+-spec bparse(binary(), headers()) -> feedparser(binary()).
+bparse(Data, Headers) ->
+	iparse(Data, Headers, binary).
+
+
+%% @private
+-spec iparse(binary(), headers(), string | binary)
+		-> feedparser(binary() | string()).
+iparse(Data, Headers, Type) ->
 	Worker = poolboy:checkout(feedparser, true, infinity),
 	try
-		BinData = term_to_binary({parse, Data, Headers}),
+		BinData = term_to_binary({parse, Data, Headers, Type}),
 		RBinData = gen_server:call(Worker, {parse, BinData}, ?TIMEOUT),
 		binary_to_term(RBinData)
 	catch exit:{Error, _} ->
