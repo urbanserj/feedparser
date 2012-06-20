@@ -1,12 +1,9 @@
 {application, feedparser,
  [
-  {description, "feedparser"},
-  {vsn, "1"},
+  {description, "Erlang port for Universal Feed Parser"},
+  {vsn, "0.1.0"},
   {registered, []},
-  {applications, [
-                  kernel,
-                  stdlib
-                 ]},
-  {mod, { feedparser_app, []}},
-  {env, [ {pool_size, 4}]}
+  {applications, [kernel, stdlib]},
+  {mod, {feedparser_app, []}},
+  {env, [{pool_size, 4}]}
  ]}.
