@@ -27,7 +27,11 @@ start_link(_) ->
 	| {bozo_exception, String}
 	| {feed, [
 		  {author, String}
-		| {author_detail, String}
+		| {author_detail, [
+			  {name, String}
+			| {href, String}
+			| {email, String}
+		  ]}
 		| {cloud, [
 			  {domain, String}
 			| {port, String | integer()}
@@ -157,7 +161,10 @@ start_link(_) ->
 		  ]}
 	  ]]}
 	| {encoding, String}
-	| {namespaces, [{atom(), String}]}
+	| {etag, String}
+	| {updated, String}
+	| {headers, [{String, String}]}
+	| {namespaces, [{String, String}]}
 	| {version, String}
 ]} | {error, internal | timeout | exit}.
 
