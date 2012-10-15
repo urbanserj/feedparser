@@ -19,6 +19,8 @@
 
 -record(state, {port, queue = queue:new()}).
 
+-export_type([feedparser/1, headers/0]).
+
 start_link(_) ->
 	gen_server:start_link(?MODULE, [], []).
 
