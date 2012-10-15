@@ -1,3 +1,4 @@
+%% @private
 -module(feedparser_app).
 
 -behaviour(application).

@@ -1,4 +1,4 @@
-
+%% @private
 -module(feedparser_sup).
 
 -behaviour(supervisor).
