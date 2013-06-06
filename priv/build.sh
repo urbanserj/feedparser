@@ -11,14 +11,15 @@ for version in 2.7 2.6 2.5; do
 	VIRTUALENV=`which virtualenv-$version 2> /dev/null || echo`
 	[ -n ""$VIRTUALENV ] && break
 done
-[ -z $VIRTUALENV ] && VIRTUALENV=`which virtualenv 2> /dev/null` || \
+[ -z $VIRTUALENV ] && VIRTUALENV=`which virtualenv 2> /dev/null`
+[ -z $VIRTUALENV ] && \
 	(echo virtualenv: command not found >&2 && exit 1)
 VER=`echo $VIRTUALENV | sed -re 's/.*virtualenv-?(.[.].)?/\1/'`
 
 $VIRTUALENV env
 
 env/bin/easy_install -Z erlport
-env/bin/easy_install -Z https://github.com/kurtmckee/feedparser/tarball/24e0e27
+env/bin/easy_install -Z https://github.com/kurtmckee/feedparser/tarball/dc3bd29
 env/bin/easy_install -Z chardet
 
 mv env/lib/*/site-packages/erlport-*/erlport .
